@@ -43,7 +43,9 @@ const Login = () => {
   const SendLoginRequest = async () => {
     const res = await fetch(`${ServerAPI}/login`, {
       method: 'POST',
+      mode: 'cors',
       headers: {
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email: userEmail, password: userPassword }),
