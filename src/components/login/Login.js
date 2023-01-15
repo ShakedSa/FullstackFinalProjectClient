@@ -53,10 +53,8 @@ const Login = () => {
     // });
 
     // const resData = await res.json();
-    let resData;
-    axios.post(`${ServerAPI}/login`, { email: userEmail, password: userPassword })
-      .then(res => resData = res)
-    return resData;
+    const res = await axios.post(`${ServerAPI}/login`, { email: userEmail, password: userPassword });
+    return res.data;
   }
 
   useEffect(() => {
