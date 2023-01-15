@@ -41,7 +41,7 @@ const Signup = () => {
   const SendSignupRequest = async () => {
     const res = await fetch(`${ServerAPI}/signup`, {
       method: 'POST',
-      credentials: 'same-origin',
+      mode: "no-cors",
       headers: {
         'Content-Type': 'application/json'
       },

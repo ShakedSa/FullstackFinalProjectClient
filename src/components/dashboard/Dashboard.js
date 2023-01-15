@@ -57,7 +57,7 @@ const Dashboard = () => {
         setLoading(true);
         const res = await fetch(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`, {
             method: 'GET',
-            credentials: 'same-origin',
+            mode: "no-cors",
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -82,7 +82,7 @@ const Dashboard = () => {
         // request server for total number rows
         const res = await fetch(`${ServerAPI}/dashboard/gettotal/${getCookie("sessionId")}`, {
             method: 'GET',
-            credentials: 'same-origin',
+            mode: "no-cors",
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -91,30 +91,39 @@ const Dashboard = () => {
         setTotalRows(rows);
     };
 
-    const deleteRow = (treatmentNumber) => {
-        const filteredRows = tableRows.filter((treatment) => treatment.treatmentNumber !== treatmentNumber);
-        setTableRows(filteredRows);
-        setTotalRows(totalRows - 1);
+    const deleteRow = async (treatmentNumber) => {
+        const res = await fetch(`${ServerAPI}/dashboard/delete/${treatmentNumber}`, {
+            method: 'DELETE',
+            mode: "no-cors",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+        const rows = await res.json();
+        await getTableRows();
+        await getTotalRows();
         // send request to update the server.
     };
 
     const editRow = (treatmentNumber) => {
+
         const rowToEdit = tableRows.find((treatment) => treatment.treatmentNumber === treatmentNumber);
         setEditTreatment(rowToEdit);
         setEditModal(true);
     };
 
-    const saveEdit = (updatedTreatment) => {
-        tableRows.forEach((treatment) => {
-            if (treatment.treatmentNumber === updatedTreatment.treatmentNumber) {
-                treatment.treatmentInfo = updatedTreatment.treatmentInfo;
-                treatment.date = updatedTreatment.date;
-                treatment.workerEmail = updatedTreatment.workerEmail;
-                treatment.carNumber = updatedTreatment.carNumber;
-            }
+    const saveEdit = async (updatedTreatment) => {
+        const res = await fetch(`${ServerAPI}/dashboard/updates`, {
+            method: 'PATCH',
+            mode: "no-cors",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ...updatedTreatment })
         });
         setEditTreatment({});
-        setTableRows([...tableRows]);
+        await getTableRows();
+        await getTotalRows();
     }
 
     const sortByNumber = () => {
@@ -239,7 +248,7 @@ const Dashboard = () => {
         // request from server rows of pageNumber
         const res = await fetch(`${ServerAPI}/dashboard/createTreatment`, {
             method: 'POST',
-            credentials: 'same-origin',
+            mode: "no-cors",
             headers: {
                 'Content-Type': 'application/json'
             },

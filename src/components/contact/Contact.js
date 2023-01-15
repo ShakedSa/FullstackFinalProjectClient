@@ -48,7 +48,7 @@ const Contact = () => {
             };
             const res = await fetch(`${ServerAPI}/contact-us`, {
                 method: 'POST',
-                credentials: 'same-origin',
+                mode: "no-cors",
                 headers: {
                     'Content-Type': 'application/json'
                 },
