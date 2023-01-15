@@ -1,6 +1,7 @@
 import { React } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Navbar from "../common/Navbar";
 import Button from "../common/Button";
 import FormControl from "../common/FormControl";
@@ -41,17 +42,20 @@ const Login = () => {
   }
 
   const SendLoginRequest = async () => {
-    const res = await fetch(`${ServerAPI}/login`, {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email: userEmail, password: userPassword }),
-    });
+    // const res = await fetch(`${ServerAPI}/login`, {
+    //   method: 'POST',
+    //   mode: 'cors',
+    //   headers: {
+    //     'Access-Control-Allow-Origin': '*',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({ email: userEmail, password: userPassword }),
+    // });
 
-    const resData = await res.json();
+    // const resData = await res.json();
+    let resData;
+    axios.post(`${ServerAPI}/login`, { email: userEmail, password: userPassword })
+      .then(res => resData = res)
     return resData;
   }
 
