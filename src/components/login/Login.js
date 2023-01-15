@@ -43,7 +43,7 @@ const Login = () => {
   const SendLoginRequest = async () => {
     const res = await fetch(`${ServerAPI}/login`, {
       method: 'POST',
-      credentials: "include",
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json'
       },
