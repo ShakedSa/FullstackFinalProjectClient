@@ -1,0 +1,73 @@
+// For debuggin.
+export const treatments = [
+    {
+        "treatmentNumber": 1,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 2,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 3,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 4,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 5,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 6,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 7,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 8,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 9,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+    {
+        "treatmentNumber": 10,
+        "treatmentInfo": "testtest",
+        "date": new Date(),
+        "workerEmail": "test@gmail.com",
+        "carNumber": "12345",
+    },
+];
