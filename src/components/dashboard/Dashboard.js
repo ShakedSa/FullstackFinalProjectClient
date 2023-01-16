@@ -57,6 +57,8 @@ const Dashboard = () => {
         // request from server rows of pageNumber
         setLoading(true);
         const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
+        console.log(rows);
+        console.log(rows.data);
         setTableRows(rows.data);
         if (!directions.number) {
             sortByNumber();
@@ -131,11 +133,11 @@ const Dashboard = () => {
         let sortFunc;
         if (directions.info) {
             sortFunc = (row1, row2) => {
-                return row1.treatmentInfo.localeCompare(row2.treatmentInfo);
+                return row1.treatmentInformation.localeCompare(row2.treatmentInformation);
             }
         } else {
             sortFunc = (row1, row2) => {
-                return row2.treatmentInfo.localeCompare(row1.treatmentInfo);
+                return row2.treatmentInformation.localeCompare(row1.treatmentInformation);
             }
         }
         const sortedRows = tableRows.sort(sortFunc);
