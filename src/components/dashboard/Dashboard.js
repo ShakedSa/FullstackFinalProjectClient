@@ -9,7 +9,6 @@ import TableRow from "../common/TableRow";
 import Modal from "../common/Modal";
 import { dashBoardLinkList, filters } from "../../assets/links";
 import { getCookie } from "../../assets/cookies";
-import { treatments } from "../../assets/data";
 import Button from "../common/Button";
 import { siteName } from "../../assets/const";
 import { ServerAPI } from "../../assets/api";
@@ -23,6 +22,16 @@ const Dashboard = () => {
         if (!sessionId) {
             navigate('/');
         }
+
+        document.title = `${siteName} - Dashboard`;
+        // fetch data from server
+        setLoading(true);
+        return () => {
+            getTableRows();
+            getTotalRows();
+            setLoading(false);
+        }
+
     }, [navigate]);
 
     const [tableRows, setTableRows] = useState([]);
@@ -44,18 +53,6 @@ const Dashboard = () => {
         "email": true,
         "carNumber": true
     });
-
-
-    useEffect(() => {
-        document.title = `${siteName} - Dashboard`;
-        // fetch data from server
-        setLoading(true);
-        return () => {
-            getTableRows();
-            getTotalRows();
-            setLoading(false);
-        }
-    }, []);
 
 
     const getTableRows = async () => {
