@@ -57,7 +57,7 @@ const Dashboard = () => {
         // request from server rows of pageNumber
         setLoading(true);
         const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
-        setTableRows(rows);
+        setTableRows(rows.data);
         if (!directions.number) {
             sortByNumber();
         } else if (!directions.email) {
@@ -75,7 +75,7 @@ const Dashboard = () => {
     const getTotalRows = async () => {
         // request server for total number rows
         const rows = await axios.get(`${ServerAPI}/dashboard/gettotal/${getCookie("sessionId")}`);
-        setTotalRows(rows);
+        setTotalRows(rows.data);
     };
 
     const deleteRow = async (treatmentNumber) => {
