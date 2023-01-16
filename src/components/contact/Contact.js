@@ -11,6 +11,7 @@ import FormControl from "../common/FormControl";
 import Button from "../common/Button";
 import Modal from "../common/Modal";
 import Select from "../common/Select";
+import Loader from "../common/Loader";
 import { getCookie } from "../../assets/cookies";
 import { stringNullOrEmpty, validateEmail } from "../../assets/validations";
 import { siteName } from "../../assets/const";
@@ -33,11 +34,13 @@ const Contact = () => {
     const [userEmail, setUserEmail] = useState("");
     const [message, setMessage] = useState("");
     const [selectedSubject, setSelectSubject] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     const [modalMessage, setModalMessage] = useState("Please fill all the information on the form, requirement are in the tooltip.");
     const [showModal, setShowModal] = useState(false);
 
     const submitContactRequest = async () => {
+        setLoading(true);
         if (!stringNullOrEmpty(fullName) && validateEmail(userEmail) && !stringNullOrEmpty(message) && selectedSubject !== 0) {
             const subject = document.getElementById("subject");
             const innerText = subject.options[subject.selectedIndex].text;
@@ -58,6 +61,7 @@ const Contact = () => {
             setModalMessage("Please fill all the information on the form, requirement are in the tooltip.");
             setShowModal(true);
         }
+        setLoading(false);
     }
 
     return (
@@ -70,6 +74,7 @@ const Contact = () => {
                 <div className="grid-container">
                     <div className="grid-item-form">
                         <form>
+                            {loading && <Loader />}
                             <FormControl
                                 inputType="text" inputId="fullname" placeHolder="Full Name" isRequired={true}
                                 containToolTip={true} toolTipContent="Example: John Doe" onChangeCallback={setFullName} />

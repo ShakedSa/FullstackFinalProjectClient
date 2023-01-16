@@ -7,6 +7,10 @@ export const dashBoardLinkList = [
         "name": "Contact Us",
         "url": "/contact"
     },
+    {
+        "name": "Logout",
+        "url": "/"
+    }
 ];
 
 export const filters = [

@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Button from "./Button";
 import { siteName } from "../../assets/const";
+import { removeCookies } from "../../assets/cookies";
 
 const Navbar = ({ links, currentActive }) => {
     const showNav = () => {
@@ -27,6 +28,11 @@ const Navbar = ({ links, currentActive }) => {
                             let className = "nav-link";
                             if (link.name === currentActive) {
                                 className += " active";
+                            }
+                            if (link.name === "Logout") {
+                                return <NavLink key={id} to={link.url} className={className} onClick={() => {
+                                    removeCookies();
+                                }}>{link.name}</NavLink>
                             }
                             return <NavLink key={id} to={link.url} className={className}>{link.name}</NavLink>
                         })}

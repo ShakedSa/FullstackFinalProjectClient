@@ -7,6 +7,7 @@ import Button from "../common/Button";
 import FormControl from "../common/FormControl";
 import Navbar from "../common/Navbar";
 import Modal from "../common/Modal";
+import Loader from "../common/Loader";
 import { siteName } from "../../assets/const";
 import { ServerAPI } from "../../assets/api";
 
@@ -18,11 +19,13 @@ const Forgotpassword = () => {
     }, []);
 
     const [userEmail, setUserEmail] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [modalMessage, setModalMessage] = useState("Please fill the email, requirement are in the tooltip.");
     const [showModal, setShowModal] = useState(false);
 
     const SendForgotPasswordRequest = async () => {
+        setLoading(true);
         if (validateEmail(userEmail)) {
             const resData = await axios.post(`${ServerAPI}/forgetpassword`, { email: userEmail });
             if (resData.message === 'True') {
@@ -35,6 +38,7 @@ const Forgotpassword = () => {
             setModalMessage("Please fill the email, requirement are in the tooltip.");
             setShowModal(true);
         }
+        setLoading(false);
     }
     return (
         <>
@@ -44,6 +48,7 @@ const Forgotpassword = () => {
                 <h1>Forgot your password?</h1>
                 <p className="text" style={{ textAlign: "left" }}>It's ok, happens to the best of the bests.<br />Fill up your email and we will resend your password.</p>
                 <form>
+                    {loading && <Loader />}
                     <FormControl
                         inputType="email" inputId="email" placeHolder="Email Adress" isRequired={true}
                         containToolTip={true} toolTipContent="Enter the email assosiated with your account to reset your password.

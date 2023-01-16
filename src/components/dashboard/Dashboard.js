@@ -13,6 +13,7 @@ import { treatments } from "../../assets/data";
 import Button from "../common/Button";
 import { siteName } from "../../assets/const";
 import { ServerAPI } from "../../assets/api";
+import Loader from "../common/Loader";
 
 const Dashboard = () => {
 
@@ -48,8 +49,12 @@ const Dashboard = () => {
     useEffect(() => {
         document.title = `${siteName} - Dashboard`;
         // fetch data from server
-        getTableRows()
-        getTotalRows();
+        setLoading(true);
+        return () => {
+            getTableRows();
+            getTotalRows();
+            setLoading(false);
+        }
     }, []);
 
 
@@ -57,8 +62,6 @@ const Dashboard = () => {
         // request from server rows of pageNumber
         setLoading(true);
         const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
-        console.log(rows);
-        console.log(rows.data);
         setTableRows(rows.data);
         if (!directions.number) {
             sortByNumber();
@@ -76,29 +79,33 @@ const Dashboard = () => {
 
     const getTotalRows = async () => {
         // request server for total number rows
+        setLoading(true);
         const rows = await axios.get(`${ServerAPI}/dashboard/gettotal/${getCookie("sessionId")}`);
         setTotalRows(rows.data);
+        setLoading(false);
     };
 
     const deleteRow = async (treatmentNumber) => {
-        const rows = await axios.delete(`${ServerAPI}/dashboard/delete/${treatmentNumber}`);
+        setLoading(true);
+        await axios.delete(`${ServerAPI}/dashboard/delete/${treatmentNumber}`);
         await getTableRows();
         await getTotalRows();
-        // send request to update the server.
+        setLoading(false);
     };
 
     const editRow = (treatmentNumber) => {
-
         const rowToEdit = tableRows.find((treatment) => treatment.treatmentNumber === treatmentNumber);
         setEditTreatment(rowToEdit);
         setEditModal(true);
     };
 
     const saveEdit = async (updatedTreatment) => {
+        setLoading(true);
         await axios.patch(`${ServerAPI}/dashboard/updates`, { ...updatedTreatment });
         setEditTreatment({});
         await getTableRows();
         await getTotalRows();
+        setLoading(false);
     }
 
     const sortByNumber = () => {
@@ -221,9 +228,11 @@ const Dashboard = () => {
 
     const addNewTreatment = async (treatment) => {
         // request from server rows of pageNumber
+        setLoading(true);
         await axios.post(`${ServerAPI}/dashboard/createTreatment`, { ...treatment, sessionId: getCookie("sessionId") });
         await getTableRows();
         await getTotalRows();
+        setLoading(false);
     }
 
     const showFiltersOptions = () => {
@@ -254,7 +263,9 @@ const Dashboard = () => {
                             return <div onClick={(e) => { eval(callBackName); showFiltersOptions(); }} key={id} className="filter-option">{filter.name}</div>
                         })}
                     </div>
+
                     <div className="table-section">
+                        {loading && <Loader />}
                         <table>
                             <thead>
                                 <tr>

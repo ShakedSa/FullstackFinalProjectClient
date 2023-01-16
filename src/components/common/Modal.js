@@ -45,7 +45,7 @@ const Modal = ({ shouldEdit, treatment, errorMessage, setDisplay, save }) => {
                         <form style={{ alignItems: "center" }}>
                             <FormControl inputType="text" inputId="treatmentInformation" placeHolder="Treatment Information"
                                 content={info} isRequired={false} containToolTip={false} onChangeCallback={setInfo} />
-                            <FormControl inputType="date" inputId="date" placeHolder="Treatment Date" content={date}
+                            <FormControl inputType="date" inputId="date" placeHolder="Treatment Date" content={new Date(date)}
                                 isDate={true} isRequired={false} containToolTip={false} onChangeCallback={setDate} />
                             <FormControl inputType="email" inputId="workerEmail" placeHolder="Worker Email" content={workerEmail} isRequired={false}
                                 containToolTip={false} onChangeCallback={setWorkerEmail} />

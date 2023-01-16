@@ -10,6 +10,7 @@ import { validateEmail, validatePassword } from "../../assets/validations";
 import { getCookie, saveCookie } from "../../assets/cookies";
 import { siteName } from "../../assets/const";
 import { ServerAPI } from "../../assets/api";
+import Loader from "../common/Loader";
 
 const Login = () => {
 
@@ -18,9 +19,11 @@ const Login = () => {
   const [remember, setRemember] = useState(false);
   const [modalMessage, setModalMessage] = useState("Please fill the email and password, requirement are in the tooltip.");
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async () => {
+    setLoading(true);
     if (validateEmail(userEmail) && validatePassword(userPassword)) {
       const res = await SendLoginRequest();
       if (res.sessionId) {
@@ -39,6 +42,7 @@ const Login = () => {
       setModalMessage("Please fill the email and password, requirement are in the tooltip.");
       setShowModal(true);
     }
+    setLoading(false);
   }
 
   const SendLoginRequest = async () => {
@@ -47,26 +51,35 @@ const Login = () => {
   }
 
   useEffect(() => {
+    setLoading(true);
     document.title = `${siteName} - Login`;
 
     // Check cookies for "remember me"
     const email = getCookie("email");
     const password = getCookie("password");
-
     if (email && password) {
-      setUserEmail(email);
-      setUserPassword(password);
-      onSubmit();
+      axios.post(`${ServerAPI}/login`, { email: email, password: password })
+        .then((res) => {
+          if (res.data.sessionId) {
+            saveCookie("sessionId", res.data.sessionId);
+            setTimeout(() => {
+              navigate("/dashboard");
+              setLoading(false);
+            });
+          }
+        });
     }
+    setLoading(false)
+    return () => setLoading(false);
   }, []);
 
   return (
     <>
       <Navbar />
-
       <main className="page">
         <h1>Login to your account</h1>
         <form>
+          {loading && <Loader />}
           <FormControl
             inputType="email" inputId="email" placeHolder="Email Address" isRequired={false}
             containToolTip={true} toolTipContent="Example: johndoe@gmail.com" onChangeCallback={setUserEmail} />

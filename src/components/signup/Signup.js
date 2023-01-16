@@ -6,9 +6,11 @@ import Navbar from "../common/Navbar";
 import Button from "../common/Button";
 import FormControl from "../common/FormControl";
 import Modal from "../common/Modal";
+import Loader from "../common/Loader";
 import { validateEmail, validatePassword } from "../../assets/validations";
 import { siteName } from "../../assets/const";
 import { ServerAPI } from "../../assets/api";
+
 
 const Signup = () => {
 
@@ -19,11 +21,13 @@ const Signup = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [modalMessage, setModalMessage] = useState("Please fill the email and password, requirement are in the tooltip.");
   const [showModal, setShowModal] = useState(false);
 
   const CreateAccount = async () => {
+    setLoading(true);
     if (validateEmail(userEmail) && validatePassword(userPassword) && userPassword === confirmPassword) {
       const res = await SendSignupRequest();
       if (res) {
@@ -37,6 +41,7 @@ const Signup = () => {
       setModalMessage("Please fill the email and password, requirement are in the tooltip.");
       setShowModal(true);
     }
+    setLoading(false);
   }
 
   const SendSignupRequest = async () => {
@@ -51,6 +56,7 @@ const Signup = () => {
       <main className="page">
         <h1>Create a new account</h1>
         <form>
+          {loading && <Loader />}
           <FormControl
             inputType="email" inputId="email" placeHolder="Email Address" isRequired={false}
             containToolTip={true} toolTipContent="Example: johndoe@gmail.com" onChangeCallback={setUserEmail} />
