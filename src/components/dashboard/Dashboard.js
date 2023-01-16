@@ -26,9 +26,9 @@ const Dashboard = () => {
         document.title = `${siteName} - Dashboard`;
         // fetch data from server
         setLoading(true);
+        getTableRows();
+        getTotalRows();
         return () => {
-            getTableRows();
-            getTotalRows();
             setLoading(false);
         }
 
@@ -54,10 +54,15 @@ const Dashboard = () => {
         "carNumber": true
     });
 
+    useEffect(() => {
+        getTableRows();
+        getTotalRows();
+    }, [searchParam, pageNumber])
 
     const getTableRows = async () => {
         // request from server rows of pageNumber
         setLoading(true);
+        console.log(pageNumber);
         const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
         setTableRows(rows.data);
         if (!directions.number) {
@@ -245,10 +250,7 @@ const Dashboard = () => {
                     <div className="table-header">
                         <span>Treatments Details</span>
                         <div>
-                            <input placeholder="Search" onChange={async (e) => {
-                                setSearchParam(e.target.value);
-                                await getTableRows();
-                            }} />
+                            <input placeholder="Search" onChange={(e) => setSearchParam(e.target.value)} />
                         </div>
                         <Button className="btn nav-btn"
                             content={<BiCog style={{ verticalAlign: "middle", height: "30px" }} />}
@@ -290,15 +292,10 @@ const Dashboard = () => {
                                     return;
                                 }
                                 setPageNumber(pageNumber - 1);
-                                getTableRows();
                             }} /></div>
                             <div>{pageNumber}</div>
                             <div><BsChevronRight onClick={() => {
-                                if ((pageNumber + 1) * 10 > totalRows) {
-                                    return;
-                                }
                                 setPageNumber(pageNumber + 1);
-                                getTableRows();
                             }} /></div>
                             <div><BsChevronDoubleRight onClick={() => { setPageNumber(totalRows % 10); getTableRows() }} /></div>
                         </div>

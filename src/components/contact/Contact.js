@@ -24,11 +24,10 @@ const Contact = () => {
         document.title = `${siteName} - Contact Us`;
         // check if logged in, if not redirect to login page.
         const sessionId = getCookie("sessionId");
-        console.log(sessionId);
         if (!sessionId) {
             navigate('/');
         }
-    }, [navigate]);
+    }, []);
 
     const [fullName, setFullName] = useState("");
     const [userEmail, setUserEmail] = useState("");
@@ -51,8 +50,16 @@ const Contact = () => {
                 subject: message,
             };
             const resData = await axios.post(`${ServerAPI}/contact-us`, { ...data });
-            if (resData.message === "True") {
+            if (resData.data.message === "True") {
                 setModalMessage("Message was received, we will do our best to address the issue!");
+                setFullName("");
+                setUserEmail("");
+                setMessage("");
+                setSelectSubject(0);
+                document.getElementById("fullname").value = "";
+                document.getElementById("email").value = "";
+                document.getElementById("message").value = "";
+                document.getElementById("subject").value = 0;
             } else {
                 setModalMessage("Failed to send the message. Please try again in a few minutes.");
             }

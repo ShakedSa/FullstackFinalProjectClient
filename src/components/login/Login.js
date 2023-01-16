@@ -27,12 +27,17 @@ const Login = () => {
     if (validateEmail(userEmail) && validatePassword(userPassword)) {
       const res = await SendLoginRequest();
       if (res.sessionId) {
+        if (getCookie("sessionId")) {
+          document.cookie = "sessionId=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
         saveCookie("sessionId", res.sessionId);
         if (remember) {
           saveCookie("email", userEmail);
           saveCookie("password", userPassword);
         }
-        navigate('/dashboard');
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 10);
       } else {
         setModalMessage(`Failed to login, ${res.message}`);
         setShowModal(true);
@@ -64,8 +69,7 @@ const Login = () => {
             saveCookie("sessionId", res.data.sessionId);
             setTimeout(() => {
               navigate("/dashboard");
-              setLoading(false);
-            });
+            }, 10);
           }
         });
     }
