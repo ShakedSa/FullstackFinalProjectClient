@@ -1,6 +1,7 @@
 import { React } from "react";
 import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { BsChevronDoubleLeft, BsChevronLeft, BsChevronRight, BsChevronDoubleRight } from "react-icons/bs";
 import { BiCog } from "react-icons/bi";
 import Navbar from "../common/Navbar";
@@ -55,14 +56,7 @@ const Dashboard = () => {
     const getTableRows = async () => {
         // request from server rows of pageNumber
         setLoading(true);
-        const res = await fetch(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`, {
-            method: 'GET',
-            mode: "no-cors",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-        const rows = await res.json();
+        const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
         setTableRows(rows);
         if (!directions.number) {
             sortByNumber();
@@ -80,26 +74,12 @@ const Dashboard = () => {
 
     const getTotalRows = async () => {
         // request server for total number rows
-        const res = await fetch(`${ServerAPI}/dashboard/gettotal/${getCookie("sessionId")}`, {
-            method: 'GET',
-            mode: "no-cors",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-        const rows = await res.json();
+        const rows = await axios.get(`${ServerAPI}/dashboard/gettotal/${getCookie("sessionId")}`);
         setTotalRows(rows);
     };
 
     const deleteRow = async (treatmentNumber) => {
-        const res = await fetch(`${ServerAPI}/dashboard/delete/${treatmentNumber}`, {
-            method: 'DELETE',
-            mode: "no-cors",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-        const rows = await res.json();
+        const rows = await axios.delete(`${ServerAPI}/dashboard/delete/${treatmentNumber}`);
         await getTableRows();
         await getTotalRows();
         // send request to update the server.
@@ -113,14 +93,7 @@ const Dashboard = () => {
     };
 
     const saveEdit = async (updatedTreatment) => {
-        const res = await fetch(`${ServerAPI}/dashboard/updates`, {
-            method: 'PATCH',
-            mode: "no-cors",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ ...updatedTreatment })
-        });
+        await axios.patch(`${ServerAPI}/dashboard/updates`, { ...updatedTreatment });
         setEditTreatment({});
         await getTableRows();
         await getTotalRows();
@@ -246,15 +219,7 @@ const Dashboard = () => {
 
     const addNewTreatment = async (treatment) => {
         // request from server rows of pageNumber
-        const res = await fetch(`${ServerAPI}/dashboard/createTreatment`, {
-            method: 'POST',
-            mode: "no-cors",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ ...treatment, sessionId: getCookie("sessionId") })
-        });
-        const rows = await res.json();
+        await axios.post(`${ServerAPI}/dashboard/createTreatment`, { ...treatment, sessionId: getCookie("sessionId") });
         await getTableRows();
         await getTotalRows();
     }

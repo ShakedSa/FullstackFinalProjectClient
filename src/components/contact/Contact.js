@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { BsHeadset } from "react-icons/bs";
 import { FaPhoneSquareAlt, FaEnvelopeOpen } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 import Navbar from "../common/Navbar";
 import { dashBoardLinkList } from "../../assets/links";
 import { subject } from "../../assets/subjects";
@@ -46,15 +47,7 @@ const Contact = () => {
                 concern: innerText,
                 subject: message,
             };
-            const res = await fetch(`${ServerAPI}/contact-us`, {
-                method: 'POST',
-                mode: "no-cors",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data),
-            });
-            const resData = await res.json();
+            const resData = await axios.post(`${ServerAPI}/contact-us`, { ...data });
             if (resData.message === "True") {
                 setModalMessage("Message was received, we will do our best to address the issue!");
             } else {

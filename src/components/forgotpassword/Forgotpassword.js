@@ -1,6 +1,7 @@
 import { React } from "react";
 import { useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
+import axios from 'axios';
 import { validateEmail } from "../../assets/validations";
 import Button from "../common/Button";
 import FormControl from "../common/FormControl";
@@ -23,15 +24,7 @@ const Forgotpassword = () => {
 
     const SendForgotPasswordRequest = async () => {
         if (validateEmail(userEmail)) {
-            const res = await fetch(`${ServerAPI}/forgetpassword`, {
-                method: 'POST',
-                mode: "no-cors",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: userEmail }),
-            });
-            const resData = await res.json();
+            const resData = await axios.post(`${ServerAPI}/forgetpassword`, { email: userEmail });
             if (resData.message === 'True') {
                 setModalMessage("We have sent your password, please check your email.");
             } else {
