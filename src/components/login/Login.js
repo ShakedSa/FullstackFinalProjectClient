@@ -1,6 +1,7 @@
 import { React } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 import Navbar from "../common/Navbar";
 import Button from "../common/Button";
@@ -21,6 +22,8 @@ const Login = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const captchRef = useRef(null);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -51,8 +54,19 @@ const Login = () => {
   }
 
   const SendLoginRequest = async () => {
-    const res = await axios.post(`${ServerAPI}/login`, { email: userEmail, password: userPassword });
-    return res.data;
+    const token = captchRef.current.getValue();
+    captchRef.current.reset();
+    const recaptchaRes = await axios.post(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${token}`
+    )
+    if (recaptchaRes.status(200)) {
+      const res = await axios.post(`${ServerAPI}/login`, { email: userEmail, password: userPassword });
+      return res.data;
+    } else {
+      setModalMessage("Please fill the reCAPTCHA");
+      setShowModal(true);
+      return { sessionId: null };
+    }
   }
 
   useEffect(() => {
@@ -96,6 +110,8 @@ const Login = () => {
           Lower case letter
           Special character
           A number." onChangeCallback={setUserPassword} />
+
+          <ReCAPTCHA ref={captchRef} sitekey={process.env.REACT_APP_SITE_KEY} />
 
           <div style={{ textAlign: "center" }}>
             <input type="checkbox" name="remember" id="remember" onChange={(e) => setRemember(e.target.checked)} />
