@@ -19,12 +19,19 @@ const Login = () => {
   const [modalMessage, setModalMessage] = useState("Please fill the email and password, requirement are in the tooltip.");
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [recaptcha, setRecaptcha] = useState(false);
   const navigate = useNavigate();
 
   const captchRef = useRef(null);
 
   const onSubmit = async () => {
     setLoading(true);
+    if (!recaptcha) {
+      setModalMessage("Please authenticate recaptcha.");
+      setShowModal(true);
+      setLoading(false);
+      return;
+    }
     if (validateEmail(userEmail) && validatePassword(userPassword)) {
       const res = await SendLoginRequest();
       if (res.sessionId) {
@@ -101,7 +108,14 @@ const Login = () => {
           <ReCAPTCHA ref={captchRef} sitekey={process.env.REACT_APP_SITE_KEY} onChange={(e) => {
             const token = captchRef.current.getValue();
             captchRef.current.reset();
-            axios.post(`${process.env.REACT_APP_SERVER_API}/recaptcha`, { token: token });
+            axios.post(`${process.env.REACT_APP_SERVER_API}/recaptcha`, { token: token })
+              .then((res) => {
+                if (res.data.message === "OK") {
+                  setRecaptcha(true);
+                } else {
+                  setRecaptcha(false);
+                }
+              })
           }} />
 
           <div style={{ textAlign: "center" }}>
