@@ -9,8 +9,6 @@ import FormControl from "../common/FormControl";
 import Modal from "../common/Modal";
 import { validateEmail, validatePassword } from "../../assets/validations";
 import { getCookie, saveCookie } from "../../assets/cookies";
-import { siteName } from "../../assets/const";
-import { ServerAPI } from "../../assets/api";
 import Loader from "../common/Loader";
 
 const Login = () => {
@@ -54,30 +52,19 @@ const Login = () => {
   }
 
   const SendLoginRequest = async () => {
-    const token = captchRef.current.getValue();
-    captchRef.current.reset();
-    const recaptchaRes = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.SECRET_KEY}&response=${token}`
-    )
-    if (recaptchaRes.status(200)) {
-      const res = await axios.post(`${ServerAPI}/login`, { email: userEmail, password: userPassword });
-      return res.data;
-    } else {
-      setModalMessage("Please fill the reCAPTCHA");
-      setShowModal(true);
-      return { sessionId: null };
-    }
+    const res = await axios.post(`${process.env.REACT_APP_SERVER_API}/login`, { email: userEmail, password: userPassword });
+    return res.data;
   }
 
   useEffect(() => {
     setLoading(true);
-    document.title = `${siteName} - Login`;
+    document.title = `${process.env.REACT_APP_SITE_NAME} - Login`;
 
     // Check cookies for "remember me"
     const email = getCookie("email");
     const password = getCookie("password");
     if (email && password) {
-      axios.post(`${ServerAPI}/login`, { email: email, password: password })
+      axios.post(`${process.env.REACT_APP_SERVER_API}/login`, { email: email, password: password })
         .then((res) => {
           if (res.data.sessionId) {
             saveCookie("sessionId", res.data.sessionId);
@@ -111,7 +98,11 @@ const Login = () => {
           Special character
           A number." onChangeCallback={setUserPassword} />
 
-          <ReCAPTCHA ref={captchRef} sitekey={process.env.REACT_APP_SITE_KEY} />
+          <ReCAPTCHA ref={captchRef} sitekey={process.env.REACT_APP_SITE_KEY} onChange={(e) => {
+            const token = captchRef.current.getValue();
+            captchRef.current.reset();
+            axios.post(`${process.env.REACT_APP_SERVER_API}/recaptcha`, { token: token });
+          }} />
 
           <div style={{ textAlign: "center" }}>
             <input type="checkbox" name="remember" id="remember" onChange={(e) => setRemember(e.target.checked)} />

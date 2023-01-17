@@ -10,8 +10,6 @@ import Modal from "../common/Modal";
 import { dashBoardLinkList, filters } from "../../assets/links";
 import { getCookie } from "../../assets/cookies";
 import Button from "../common/Button";
-import { siteName } from "../../assets/const";
-import { ServerAPI } from "../../assets/api";
 import Loader from "../common/Loader";
 
 const Dashboard = () => {
@@ -23,7 +21,7 @@ const Dashboard = () => {
             navigate('/');
         }
 
-        document.title = `${siteName} - Dashboard`;
+        document.title = `${process.env.REACT_APP_SITE_NAME} - Dashboard`;
         // fetch data from server
         setLoading(true);
         getTableRows();
@@ -76,7 +74,7 @@ const Dashboard = () => {
     const getTableRows = async () => {
         // request from server rows of pageNumber
         setLoading(true);
-        const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
+        const rows = await axios.get(`${process.env.REACT_APP_SERVER_API}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
         setTableRows(rows.data);
         setLoading(false);
     };
@@ -84,14 +82,14 @@ const Dashboard = () => {
     const getTotalRows = async () => {
         // request server for total number rows
         setLoading(true);
-        const rows = await axios.get(`${ServerAPI}/dashboard/gettotal/${getCookie("sessionId")}`);
+        const rows = await axios.get(`${process.env.REACT_APP_SERVER_API}/dashboard/gettotal/${getCookie("sessionId")}`);
         setTotalRows(rows.data);
         setLoading(false);
     };
 
     const deleteRow = async (treatmentNumber) => {
         setLoading(true);
-        await axios.delete(`${ServerAPI}/dashboard/delete/${treatmentNumber}`);
+        await axios.delete(`${process.env.REACT_APP_SERVER_API}/dashboard/delete/${treatmentNumber}`);
         await getTableRows();
         await getTotalRows();
         setLoading(false);
@@ -105,7 +103,7 @@ const Dashboard = () => {
 
     const saveEdit = async (updatedTreatment) => {
         setLoading(true);
-        await axios.patch(`${ServerAPI}/dashboard/updates`, { ...updatedTreatment });
+        await axios.patch(`${process.env.REACT_APP_SERVER_API}/dashboard/updates`, { ...updatedTreatment });
         setEditTreatment({});
         await getTableRows();
         await getTotalRows();
@@ -228,7 +226,7 @@ const Dashboard = () => {
     const addNewTreatment = async (treatment) => {
         // request from server rows of pageNumber
         setLoading(true);
-        await axios.post(`${ServerAPI}/dashboard/createTreatment`, { ...treatment, sessionId: getCookie("sessionId") });
+        await axios.post(`${process.env.REACT_APP_SERVER_API}/dashboard/createTreatment`, { ...treatment, sessionId: getCookie("sessionId") });
         await getTableRows();
         await getTotalRows();
         setLoading(false);

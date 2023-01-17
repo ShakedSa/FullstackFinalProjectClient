@@ -14,14 +14,12 @@ import Select from "../common/Select";
 import Loader from "../common/Loader";
 import { getCookie } from "../../assets/cookies";
 import { stringNullOrEmpty, validateEmail } from "../../assets/validations";
-import { siteName } from "../../assets/const";
-import { ServerAPI } from "../../assets/api";
 
 const Contact = () => {
 
     const navigate = useNavigate();
     useEffect(() => {
-        document.title = `${siteName} - Contact Us`;
+        document.title = `${process.env.REACT_APP_SITE_NAME} - Contact Us`;
         // check if logged in, if not redirect to login page.
         const sessionId = getCookie("sessionId");
         if (!sessionId) {
@@ -49,7 +47,7 @@ const Contact = () => {
                 concern: innerText,
                 subject: message,
             };
-            const resData = await axios.post(`${ServerAPI}/contact-us`, { ...data });
+            const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/contact-us`, { ...data });
             if (resData.data.message === "True") {
                 setModalMessage("Message was received, we will do our best to address the issue!");
                 setFullName("");

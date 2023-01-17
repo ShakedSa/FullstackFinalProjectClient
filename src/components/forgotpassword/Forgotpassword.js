@@ -8,14 +8,12 @@ import FormControl from "../common/FormControl";
 import Navbar from "../common/Navbar";
 import Modal from "../common/Modal";
 import Loader from "../common/Loader";
-import { siteName } from "../../assets/const";
-import { ServerAPI } from "../../assets/api";
 
 
 const Forgotpassword = () => {
 
     useEffect(() => {
-        document.title = `${siteName} - Forgot Password`;
+        document.title = `${process.env.REACT_APP_SITE_NAME} - Forgot Password`;
     }, []);
 
     const [userEmail, setUserEmail] = useState("");
@@ -27,7 +25,7 @@ const Forgotpassword = () => {
     const SendForgotPasswordRequest = async () => {
         setLoading(true);
         if (validateEmail(userEmail)) {
-            const resData = await axios.post(`${ServerAPI}/forgetpassword`, { email: userEmail });
+            const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/forgetpassword`, { email: userEmail });
             if (resData.data.message === 'True') {
                 setModalMessage("We have sent your password, please check your email.");
             } else {

@@ -3,9 +3,7 @@ import { NavLink } from "react-router-dom";
 import axios from "axios";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Button from "./Button";
-import { siteName } from "../../assets/const";
-import { getCookie, removeCookies } from "../../assets/cookies";
-import { ServerAPI } from "../../assets/api";
+import { getCookie, removeCookie } from "../../assets/cookies";
 
 const Navbar = ({ links, currentActive }) => {
     const showNav = () => {
@@ -17,7 +15,7 @@ const Navbar = ({ links, currentActive }) => {
             <div className="nav-center">
                 <div className="nav-header">
                     <NavLink to="/" className="nav-logo">
-                        {siteName}
+                        {process.env.REACT_APP_SITE_NAME}
                     </NavLink>
                     {links &&
                         <Button className="btn nav-btn" content={<GiHamburgerMenu style={{ verticalAlign: "middle", height: "30px" }} />}
@@ -33,8 +31,10 @@ const Navbar = ({ links, currentActive }) => {
                             }
                             if (link.name === "Logout") {
                                 return <NavLink key={id} to={link.url} className={className} onClick={async () => {
-                                    await axios.post(`${ServerAPI}/logout`, { sessionId: getCookie("sessionId") });
-                                    removeCookies();
+                                    await axios.post(`${process.env.REACT_APP_SERVER_API}/logout`, { sessionId: getCookie("sessionId") });
+                                    removeCookie("sessionId");
+                                    removeCookie("email");
+                                    removeCookie("password");
                                 }}>{link.name}</NavLink>
                             }
                             return <NavLink key={id} to={link.url} className={className}>{link.name}</NavLink>

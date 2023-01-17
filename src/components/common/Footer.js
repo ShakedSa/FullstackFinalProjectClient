@@ -1,5 +1,4 @@
 import React from "react";
-import { siteName } from "../../assets/const";
 
 
 const Footer = () => {
@@ -7,7 +6,7 @@ const Footer = () => {
         <footer className="page-footer">
             <p>
                 &copy; <span id="date"></span>
-                <span className="footer-logo"> {siteName} </span>Built by MBI & SS
+                <span className="footer-logo"> {process.env.REACT_APP_SITE_NAME} </span>Built by MBI & SS
             </p>
         </footer>
     )

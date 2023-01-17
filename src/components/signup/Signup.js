@@ -8,8 +8,6 @@ import FormControl from "../common/FormControl";
 import Modal from "../common/Modal";
 import Loader from "../common/Loader";
 import { validateEmail, validatePassword } from "../../assets/validations";
-import { siteName } from "../../assets/const";
-import { ServerAPI } from "../../assets/api";
 
 
 const Signup = () => {
@@ -17,7 +15,7 @@ const Signup = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = `${siteName} - Sign up`;
+    document.title = `${process.env.REACT_APP_SITE_NAME} - Sign up`;
   }, []);
 
   const [userEmail, setUserEmail] = useState("");
@@ -49,7 +47,7 @@ const Signup = () => {
   }
 
   const SendSignupRequest = async () => {
-    const resData = await axios.post(`${ServerAPI}/signup`, { email: userEmail, password: userPassword });
+    const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/signup`, { email: userEmail, password: userPassword });
     return resData.data;
   }
   const waitAndClose = () => {

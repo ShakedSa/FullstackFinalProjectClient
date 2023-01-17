@@ -24,8 +24,6 @@ export const getCookie = (cookieName) => {
 }
 
 /// Remove cookies on logout.
-export const removeCookies = () => {
-    document.cookie = "email=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "password=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "sessionId=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+export const removeCookie = (cookieName) => {
+    document.cookie = `${cookieName}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 }
