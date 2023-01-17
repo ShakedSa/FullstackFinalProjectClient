@@ -59,12 +59,7 @@ const Dashboard = () => {
         getTotalRows();
     }, [searchParam, pageNumber])
 
-    const getTableRows = async () => {
-        // request from server rows of pageNumber
-        setLoading(true);
-        console.log(pageNumber);
-        const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
-        setTableRows(rows.data);
+    useEffect(() => {
         if (!directions.number) {
             sortByNumber();
         } else if (!directions.email) {
@@ -76,6 +71,14 @@ const Dashboard = () => {
         } else if (!directions.carNumber) {
             sortByCar();
         }
+    }, [tableRows])
+
+    const getTableRows = async () => {
+        // request from server rows of pageNumber
+        setLoading(true);
+        console.log(pageNumber);
+        const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
+        setTableRows(rows.data);
         setLoading(false);
     };
 
