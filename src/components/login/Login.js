@@ -1,7 +1,7 @@
 import { React } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import Reaptcha from 'reaptcha'
 import axios from "axios";
 import Navbar from "../common/Navbar";
 import Button from "../common/Button";
@@ -23,6 +23,13 @@ const Login = () => {
   const navigate = useNavigate();
 
   const captchRef = useRef(null);
+
+  const verifyCaptcha = () => {
+    captchRef.current.getResponse().then(res => {
+      console.log(res);
+      setRecaptcha(res);
+    })
+  }
 
   const onSubmit = async () => {
     setLoading(true);
@@ -105,18 +112,7 @@ const Login = () => {
           Special character
           A number." onChangeCallback={setUserPassword} />
 
-          <ReCAPTCHA ref={captchRef} sitekey={process.env.REACT_APP_SITE_KEY} onChange={(e) => {
-            const token = captchRef.current.getValue();
-            captchRef.current.reset();
-            axios.post(`${process.env.REACT_APP_SERVER_API}/recaptcha`, { token: token })
-              .then((res) => {
-                if (res.data.message === "OK") {
-                  setRecaptcha(true);
-                } else {
-                  setRecaptcha(false);
-                }
-              })
-          }} />
+          <Reaptcha sitekey={process.env.REACT_APP_SITE_KEY} ref={captchRef} onVerify={verifyCaptcha} />
 
           <div style={{ textAlign: "center" }}>
             <input type="checkbox" name="remember" id="remember" onChange={(e) => setRemember(e.target.checked)} />
