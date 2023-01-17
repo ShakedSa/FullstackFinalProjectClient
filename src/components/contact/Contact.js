@@ -61,7 +61,7 @@ const Contact = () => {
                 document.getElementById("message").value = "";
                 document.getElementById("subject").value = 0;
             } else {
-                setModalMessage("Failed to send the message. Please try again in a few minutes.");
+                setModalMessage(`Failed to send the message. ${resData.data.message}`);
             }
             setShowModal(true);
         } else {

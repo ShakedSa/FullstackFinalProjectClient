@@ -135,9 +135,8 @@ const Dashboard = () => {
                 return 0;
             }
         }
-        const sortedRows = tableRows.sort(sortFunc);
+        tableRows.sort(sortFunc);
         setDirections({ ...directions, "number": !directions.number });
-        setTableRows([...sortedRows]);
     }
 
     const sortByInformation = () => {
@@ -151,9 +150,8 @@ const Dashboard = () => {
                 return row2.treatmentInformation.localeCompare(row1.treatmentInformation);
             }
         }
-        const sortedRows = tableRows.sort(sortFunc);
+        tableRows.sort(sortFunc);
         setDirections({ ...directions, "info": !directions.info });
-        setTableRows([...sortedRows]);
     }
 
     const sortByDate = () => {
@@ -181,9 +179,8 @@ const Dashboard = () => {
                 return 0;
             }
         }
-        const sortedRows = tableRows.sort(sortFunc);
+        tableRows.sort(sortFunc);
         setDirections({ ...directions, "date": !directions.date });
-        setTableRows([...sortedRows]);
     }
 
     const sortByEmail = () => {
@@ -197,9 +194,8 @@ const Dashboard = () => {
                 return row2.workerEmail.localeCompare(row1.workerEmail);
             }
         }
-        const sortedRows = tableRows.sort(sortFunc);
+        tableRows.sort(sortFunc);
         setDirections({ ...directions, "email": !directions.email });
-        setTableRows([...sortedRows]);
     }
 
     const sortByCar = () => {
@@ -225,9 +221,8 @@ const Dashboard = () => {
                 return 0;
             }
         }
-        const sortedRows = tableRows.sort(sortFunc);
+        tableRows.sort(sortFunc);
         setDirections({ ...directions, "carNumber": !directions.carNumber });
-        setTableRows([...sortedRows]);
     }
 
     const addNewTreatment = async (treatment) => {
@@ -297,6 +292,9 @@ const Dashboard = () => {
                             }} /></div>
                             <div>{pageNumber}</div>
                             <div><BsChevronRight onClick={() => {
+                                if (pageNumber * 10 >= totalRows) {
+                                    return;
+                                }
                                 setPageNumber(pageNumber + 1);
                             }} /></div>
                             <div><BsChevronDoubleRight onClick={() => { setPageNumber(totalRows % 10); getTableRows() }} /></div>

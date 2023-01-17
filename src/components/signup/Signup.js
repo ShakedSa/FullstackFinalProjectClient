@@ -1,6 +1,6 @@
 import { React } from "react";
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import Navbar from "../common/Navbar";
 import Button from "../common/Button";
@@ -14,6 +14,8 @@ import { ServerAPI } from "../../assets/api";
 
 const Signup = () => {
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = `${siteName} - Sign up`;
   }, []);
@@ -25,6 +27,7 @@ const Signup = () => {
 
   const [modalMessage, setModalMessage] = useState("Please fill the email and password, requirement are in the tooltip.");
   const [showModal, setShowModal] = useState(false);
+  const [showModalOnError, setShowModalOnError] = useState(false);
 
   const CreateAccount = async () => {
     setLoading(true);
@@ -32,14 +35,15 @@ const Signup = () => {
       const res = await SendSignupRequest();
       if (res.message === 'True') {
         setModalMessage("Account created successfuly");
+        setShowModal(true);
       } else {
         setModalMessage(`Failed to create an account. ${res.message}`);
+        setShowModalOnError(true);
       }
-      setShowModal(true);
     } else {
       // display modal.
       setModalMessage("Please fill the email and password, requirement are in the tooltip.");
-      setShowModal(true);
+      setShowModalOnError(true);
     }
     setLoading(false);
   }
@@ -47,6 +51,10 @@ const Signup = () => {
   const SendSignupRequest = async () => {
     const resData = await axios.post(`${ServerAPI}/signup`, { email: userEmail, password: userPassword });
     return resData.data;
+  }
+  const waitAndClose = () => {
+    setShowModal(false);
+    navigate("/");
   }
 
   return (
@@ -82,7 +90,8 @@ const Signup = () => {
             <NavLink to="/forgotpassword">Forgot Password?</NavLink>
           </p>
         </form>
-        {showModal && <Modal errorMessage={modalMessage} setDisplay={setShowModal} />}
+        {showModalOnError && <Modal errorMessage={modalMessage} setDisplay={setShowModalOnError} />}
+        {showModal && <Modal errorMessage={modalMessage} setDisplay={waitAndClose} />}
       </main>
     </>
   );
