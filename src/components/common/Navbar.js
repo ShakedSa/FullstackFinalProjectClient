@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Button from "./Button";
 import { siteName } from "../../assets/const";
-import { removeCookies } from "../../assets/cookies";
+import { getCookie, removeCookies } from "../../assets/cookies";
 
 const Navbar = ({ links, currentActive }) => {
     const showNav = () => {
@@ -30,7 +30,8 @@ const Navbar = ({ links, currentActive }) => {
                                 className += " active";
                             }
                             if (link.name === "Logout") {
-                                return <NavLink key={id} to={link.url} className={className} onClick={() => {
+                                return <NavLink key={id} to={link.url} className={className} onClick={async () => {
+                                    await axios.post(`${ServerAPI}/logout`, { sessionId: getCookie("sessionId") });
                                     removeCookies();
                                 }}>{link.name}</NavLink>
                             }
