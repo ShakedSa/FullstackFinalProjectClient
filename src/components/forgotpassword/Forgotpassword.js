@@ -28,7 +28,7 @@ const Forgotpassword = () => {
         setLoading(true);
         if (validateEmail(userEmail)) {
             const resData = await axios.post(`${ServerAPI}/forgetpassword`, { email: userEmail });
-            if (resData.message === 'True') {
+            if (resData.data.message === 'True') {
                 setModalMessage("We have sent your password, please check your email.");
             } else {
                 setModalMessage("Failed to send your password. Please try again in a few minutes.");

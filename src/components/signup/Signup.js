@@ -30,10 +30,10 @@ const Signup = () => {
     setLoading(true);
     if (validateEmail(userEmail) && validatePassword(userPassword) && userPassword === confirmPassword) {
       const res = await SendSignupRequest();
-      if (res) {
+      if (res.message === 'True') {
         setModalMessage("Account created successfuly");
       } else {
-        setModalMessage("Failed to create an account. Please try again in a few minutes.");
+        setModalMessage(`Failed to create an account. ${res.message}`);
       }
       setShowModal(true);
     } else {
@@ -46,7 +46,7 @@ const Signup = () => {
 
   const SendSignupRequest = async () => {
     const resData = await axios.post(`${ServerAPI}/signup`, { email: userEmail, password: userPassword });
-    return resData.message === 'True';
+    return resData.data;
   }
 
   return (
