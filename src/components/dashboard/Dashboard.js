@@ -76,7 +76,6 @@ const Dashboard = () => {
     const getTableRows = async () => {
         // request from server rows of pageNumber
         setLoading(true);
-        console.log(pageNumber);
         const rows = await axios.get(`${ServerAPI}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
         setTableRows(rows.data);
         setLoading(false);
