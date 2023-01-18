@@ -31,10 +31,11 @@ const Navbar = ({ links, currentActive }) => {
                             }
                             if (link.name === "Logout") {
                                 return <NavLink key={id} to={link.url} className={className} onClick={async () => {
-                                    await axios.post(`${process.env.REACT_APP_SERVER_API}/logout`, { sessionId: getCookie("sessionId") });
+                                    const sessionId = getCookie("sessionId");
                                     removeCookie("sessionId");
                                     removeCookie("email");
                                     removeCookie("password");
+                                    await axios.post(`${process.env.REACT_APP_SERVER_API}/logout`, { sessionId: sessionId });
                                 }}>{link.name}</NavLink>
                             }
                             return <NavLink key={id} to={link.url} className={className}>{link.name}</NavLink>
