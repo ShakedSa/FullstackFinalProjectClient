@@ -29,6 +29,9 @@ const Login = () => {
       setRecaptcha(res);
     })
   }
+  const resetCaptcha = () => {
+    setRecaptcha(false);
+  }
 
   const onSubmit = async () => {
     setLoading(true);
@@ -111,7 +114,7 @@ const Login = () => {
           Special character
           A number." onChangeCallback={setUserPassword} />
 
-          <Reaptcha sitekey={process.env.REACT_APP_SITE_KEY} ref={captchRef} onVerify={verifyCaptcha} />
+          <Reaptcha sitekey={process.env.REACT_APP_SITE_KEY} ref={captchRef} onVerify={verifyCaptcha} onExpire={resetCaptcha} />
 
           <div style={{ textAlign: "center" }}>
             <input type="checkbox" name="remember" id="remember" onChange={(e) => setRemember(e.target.checked)} />

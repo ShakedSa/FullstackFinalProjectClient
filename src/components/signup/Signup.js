@@ -34,6 +34,9 @@ const Signup = () => {
       setRecaptcha(res);
     })
   }
+  const resetCaptcha = () => {
+    setRecaptcha(false);
+  }
 
   const CreateAccount = async () => {
     setLoading(true);
@@ -94,7 +97,7 @@ const Signup = () => {
             inputType="password" inputId="confirmPassword" placeHolder="Confirm Password" isRequired={false}
             containToolTip={true} toolTipContent="Confirm password should match password." onChangeCallback={setConfirmPassword} />
 
-          <Reaptcha sitekey={process.env.REACT_APP_SITE_KEY} ref={captchRef} onVerify={verifyCaptcha} />
+          <Reaptcha sitekey={process.env.REACT_APP_SITE_KEY} ref={captchRef} onVerify={verifyCaptcha} onExpire={resetCaptcha} />
 
           <Button className="btn" content="Create Account" onClickCallback={CreateAccount} />
 
