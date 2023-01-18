@@ -26,7 +26,6 @@ const Login = () => {
 
   const verifyCaptcha = () => {
     captchRef.current.getResponse().then(res => {
-      console.log(res);
       setRecaptcha(res);
     })
   }

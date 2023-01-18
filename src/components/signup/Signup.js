@@ -1,6 +1,7 @@
 import { React } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import Reaptcha from 'reaptcha'
 import axios from 'axios';
 import Navbar from "../common/Navbar";
 import Button from "../common/Button";
@@ -22,13 +23,26 @@ const Signup = () => {
   const [userPassword, setUserPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [modalMessage, setModalMessage] = useState("Please fill the email and password, requirement are in the tooltip.");
   const [showModal, setShowModal] = useState(false);
   const [showModalOnError, setShowModalOnError] = useState(false);
+  const [recaptcha, setRecaptcha] = useState(false);
+
+  const captchRef = useRef(null);
+  const verifyCaptcha = () => {
+    captchRef.current.getResponse().then(res => {
+      setRecaptcha(res);
+    })
+  }
 
   const CreateAccount = async () => {
     setLoading(true);
+    if (!recaptcha) {
+      setModalMessage("Please authenticate recaptcha.");
+      setShowModal(true);
+      setLoading(false);
+      return;
+    }
     if (validateEmail(userEmail) && validatePassword(userPassword) && userPassword === confirmPassword) {
       const res = await SendSignupRequest();
       if (res.message === 'True') {
@@ -79,6 +93,8 @@ const Signup = () => {
           <FormControl
             inputType="password" inputId="confirmPassword" placeHolder="Confirm Password" isRequired={false}
             containToolTip={true} toolTipContent="Confirm password should match password." onChangeCallback={setConfirmPassword} />
+
+          <Reaptcha sitekey={process.env.REACT_APP_SITE_KEY} ref={captchRef} onVerify={verifyCaptcha} />
 
           <Button className="btn" content="Create Account" onClickCallback={CreateAccount} />
 
