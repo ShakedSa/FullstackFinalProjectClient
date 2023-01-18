@@ -16,7 +16,7 @@ const Modal = ({ shouldEdit, treatment, errorMessage, setDisplay, save }) => {
     }
 
     const saveTreatment = () => {
-        if (validateEmail(workerEmail) && !stringNullOrEmpty(info) && !stringNullOrEmpty(date) && !stringNullOrEmpty(carNumber)) {
+        if (validateEmail(workerEmail) && !stringNullOrEmpty(info) && !stringNullOrEmpty(date) && !stringNullOrEmpty(carNumber) && carNumber.length === 8 && !isNaN(carNumber)) {
             let number;
             if (treatment) {
                 number = treatment.treatmentNumber;

@@ -279,9 +279,9 @@ const Dashboard = () => {
                         </table>
                     </div>
                     <div className="pagination">
-                        <span style={{ fontSize: "0.9rem" }}>Displaying {pageNumber} - {pageNumber + 9} out of {totalRows} treatments</span>
+                        <span style={{ fontSize: "0.9rem" }}>Displaying {pageNumber * 10 - 9} - {pageNumber * 10} out of {totalRows} treatments</span>
                         <div className="pages">
-                            <div><BsChevronDoubleLeft style={{ verticalAlign: "bottom" }} onClick={() => { setPageNumber(1); getTableRows(); }} /></div>
+                            <div><BsChevronDoubleLeft style={{ verticalAlign: "bottom" }} onClick={() => { setPageNumber(1); }} /></div>
                             <div><BsChevronLeft onClick={() => {
                                 if ((pageNumber - 1) < 1) {
                                     return;
@@ -295,7 +295,13 @@ const Dashboard = () => {
                                 }
                                 setPageNumber(pageNumber + 1);
                             }} /></div>
-                            <div><BsChevronDoubleRight onClick={() => { setPageNumber(Math.floor((totalRows / 10)) + 1); getTableRows() }} /></div>
+                            <div><BsChevronDoubleRight onClick={() => {
+                                if (totalRows % 10 === 0) {
+                                    setPageNumber(totalRows / 10);
+                                } else {
+                                    setPageNumber(Math.ceil((totalRows / 10)));
+                                }
+                            }} /></div>
                         </div>
                     </div>
                 </div>
