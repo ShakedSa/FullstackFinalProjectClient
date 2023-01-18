@@ -295,7 +295,7 @@ const Dashboard = () => {
                                 }
                                 setPageNumber(pageNumber + 1);
                             }} /></div>
-                            <div><BsChevronDoubleRight onClick={() => { setPageNumber((totalRows / 10) + 1); getTableRows() }} /></div>
+                            <div><BsChevronDoubleRight onClick={() => { setPageNumber(Math.floor((totalRows / 10)) + 1); getTableRows() }} /></div>
                         </div>
                     </div>
                 </div>
