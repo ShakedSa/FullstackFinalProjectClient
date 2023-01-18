@@ -106,9 +106,8 @@ const Contact = () => {
                         </div>
                         <div className="support">
                             <p className="text"><span style={{ verticalAlign: "middle" }}><FaEnvelopeOpen /></span> Mailing Address</p>
-                            <span>RandomCompany</span>
-                            <span>RandomAddress</span>
-                            <span>RandomCountry, RandomCity, RandomStreet, 5</span>
+                            <span>S&M Garage<br /></span>
+                            <span>Israel, Haifa, Halutsie HaTa'siya, 88</span>
                         </div>
                         <div className="support">
                             {/* <!-- Random place from google maps. --> */}
