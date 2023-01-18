@@ -69,6 +69,18 @@ const Contact = () => {
         setLoading(false);
     }
 
+    const contactUs = async () => {
+        setLoading(true);
+        const res = await axios.post(`${process.env.REACT_APP_SERVER_API}/contact-email`, { sessionId: getCookie('sessionId') });
+        if (res.data.message === 'True') {
+            setModalMessage("We received your request and we will return to you shortly.");
+        } else {
+            setModalMessage("There was an issue sending your request. Please try again in a few minutes.");
+        }
+        setShowModal(true);
+        setLoading(false);
+    }
+
     return (
         <>
             <Navbar links={dashBoardLinkList} currentActive="Contact Us" />
@@ -98,7 +110,7 @@ const Contact = () => {
                     <div className="grid-item-support">
                         <div className="support">
                             <p className="text"><span style={{ verticalAlign: "middle" }}><BsHeadset /></span> Need 24/7 Support?</p>
-                            <Button className="reverse-btn" content="Contact Support" />
+                            <Button className="reverse-btn" content="Contact Support" onClickCallback={contactUs} />
                         </div>
                         <div className="support">
                             <p className="text"><span style={{ verticalAlign: "middle" }}><FaPhoneSquareAlt /></span> Call Sales Now! <NavLink>+1-512-827-3500</NavLink>

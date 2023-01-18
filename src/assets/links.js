@@ -8,6 +8,10 @@ export const dashBoardLinkList = [
         "url": "/contact"
     },
     {
+        "name": "Abous Us",
+        "url": "/abous"
+    },
+    {
         "name": "Logout",
         "url": "/"
     }

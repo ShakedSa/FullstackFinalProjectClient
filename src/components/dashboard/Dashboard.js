@@ -233,7 +233,7 @@ const Dashboard = () => {
     }
 
     const showFiltersOptions = () => {
-        document.querySelector('.filter-options').classList.toggle('show-links');
+        document.querySelector('.filter-options').classList.toggle('show-filters');
     }
 
     return (

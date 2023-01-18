@@ -664,6 +664,10 @@ Modal
 }
 
 .show-links {
+  height: 244px;
+}
+
+.show-filters{
   height: 183px;
 }
 
