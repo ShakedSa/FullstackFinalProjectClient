@@ -17,13 +17,11 @@ const Modal = ({ shouldEdit, treatment, errorMessage, setDisplay, save }) => {
 
     const saveTreatment = () => {
         if (validateEmail(workerEmail) && !stringNullOrEmpty(info) && !stringNullOrEmpty(date) && !stringNullOrEmpty(carNumber)) {
-            let number, date;
+            let number;
             if (treatment) {
                 number = treatment.treatmentNumber;
-                date = treatment.date;
             } else {
                 number = 2000; // random number, will be assign in the backend.
-                date = new Date().toLocaleString();
             }
             const newTreatment = {
                 "treatmentNumber": number,
