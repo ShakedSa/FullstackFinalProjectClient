@@ -87,6 +87,9 @@ const Login = () => {
             setTimeout(() => {
               navigate("/dashboard");
             }, 10);
+          } else {
+            setModalMessage(`Failed to login, ${res.data.message}`);
+            setShowModal(true);
           }
         });
     }

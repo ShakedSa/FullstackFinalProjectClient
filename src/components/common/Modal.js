@@ -55,7 +55,7 @@ const Modal = ({ shouldEdit, treatment, errorMessage, setDisplay, save }) => {
                     {!shouldEdit &&
                         <p className="text">{errorMessage}</p>}
 
-                    <Button className="btn" content="Close" onClickCallback={closeModal} />
+                    <Button className="reverse-btn" content="Close" onClickCallback={closeModal} />
                 </div>
             </div>
         </>
