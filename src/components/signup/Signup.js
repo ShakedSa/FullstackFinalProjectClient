@@ -42,7 +42,7 @@ const Signup = () => {
     setLoading(true);
     if (!recaptcha) {
       setModalMessage("Please authenticate recaptcha.");
-      setShowModal(true);
+      setShowModalOnError(true);
       setLoading(false);
       return;
     }
