@@ -80,7 +80,8 @@ const Login = () => {
     const email = getCookie("email");
     const password = getCookie("password");
     if (email && password) {
-      axios.post(`${process.env.REACT_APP_SERVER_API}/login`, { email: email, password: password })
+      const sessionId = getCookie('sessionId');
+      axios.post(`${process.env.REACT_APP_SERVER_API}/login-session`, { sessionId: sessionId })
         .then((res) => {
           if (res.data.sessionId) {
             saveCookie("sessionId", res.data.sessionId);
