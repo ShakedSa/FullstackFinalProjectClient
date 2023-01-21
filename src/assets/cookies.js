@@ -7,6 +7,13 @@ export const saveCookie = (cookieName, cookieValue) => {
     document.cookie = cookieName + "=" + cookieValue + "; " + expires;
 }
 
+export const saveSession = (sessionId) => {
+    const date = new Date();
+    date.setTime(date.getTime() + (60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = "sessionId=" + sessionId + "; " + expires;
+}
+
 /// Gets a cookie value if exists.
 export const getCookie = (cookieName) => {
     const cookies = document.cookie.split(";");

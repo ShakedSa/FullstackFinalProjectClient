@@ -8,7 +8,7 @@ import Button from "../common/Button";
 import FormControl from "../common/FormControl";
 import Modal from "../common/Modal";
 import { validateEmail, validatePassword } from "../../assets/validations";
-import { getCookie, saveCookie } from "../../assets/cookies";
+import { getCookie, saveCookie, saveSession } from "../../assets/cookies";
 import Loader from "../common/Loader";
 
 const Login = () => {
@@ -44,14 +44,12 @@ const Login = () => {
     if (validateEmail(userEmail) && validatePassword(userPassword)) {
       const res = await SendLoginRequest();
       if (res.sessionId) {
-        if (getCookie("sessionId")) {
-          document.cookie = "sessionId=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        }
-        saveCookie("sessionId", res.sessionId);
         if (remember) {
+          saveCookie("sessionId", res.sessionId);
           saveCookie("email", userEmail);
           saveCookie("password", userPassword);
         }
+        saveSession(res.sessionId);
         setTimeout(() => {
           navigate('/dashboard');
         }, 10);
@@ -97,6 +95,24 @@ const Login = () => {
     setLoading(false)
     return () => setLoading(false);
   }, []);
+
+  useEffect(() => {
+    const sessionId = getCookie('sessionId');
+    if (sessionId) {
+      axios.post(`${process.env.REACT_APP_SERVER_API}/login-session`, { sessionId: sessionId })
+        .then((res) => {
+          if (res.data.sessionId) {
+            saveSession(res.data.sessionId);
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, 10);
+          } else {
+            setModalMessage(`Failed to login, ${res.data.message}`);
+            setShowModal(true);
+          }
+        });
+    }
+  }, [])
 
   return (
     <>
