@@ -64,8 +64,12 @@ const Signup = () => {
   }
 
   const SendSignupRequest = async () => {
-    const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/signup`, { email: userEmail, password: userPassword });
-    return resData.data;
+    try {
+      const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/signup`, { email: userEmail, password: userPassword });
+      return resData.data;
+    } catch (err) {
+      return { message: err.message };
+    }
   }
   const waitAndClose = () => {
     setShowModal(false);

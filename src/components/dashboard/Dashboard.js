@@ -44,12 +44,16 @@ const Dashboard = () => {
 
     const [newTreatment, setNewTreatment] = useState(false);
 
+    /// 3 states.
+    /// 0 - idle
+    /// 1 - sort asending order.
+    /// 2 - sort descending order.
     const [directions, setDirections] = useState({
-        "number": true,
-        "info": true,
-        "date": true,
-        "email": true,
-        "carNumber": true
+        "number": 0,
+        "info": 0,
+        "date": 0,
+        "email": 0,
+        "carNumber": 0
     });
 
     useEffect(() => {
@@ -58,15 +62,15 @@ const Dashboard = () => {
     }, [searchParam, pageNumber])
 
     useEffect(() => {
-        if (!directions.number) {
+        if (directions.number !== 0) {
             sortByNumber();
-        } else if (!directions.email) {
+        } else if (directions.email !== 0) {
             sortByEmail();
-        } else if (!directions.date) {
+        } else if (directions.date !== 0) {
             sortByDate();
-        } else if (!directions.info) {
+        } else if (directions.email !== 0) {
             sortByInformation();
-        } else if (!directions.carNumber) {
+        } else if (directions.carNumber !== 0) {
             sortByCar();
         }
     }, [tableRows])
@@ -74,24 +78,36 @@ const Dashboard = () => {
     const getTableRows = async () => {
         // request from server rows of pageNumber
         setLoading(true);
-        const rows = await axios.get(`${process.env.REACT_APP_SERVER_API}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
-        setTableRows(rows.data);
+        try {
+            const rows = await axios.get(`${process.env.REACT_APP_SERVER_API}/dashboard/${getCookie("sessionId")}/?page=${pageNumber}&search=${searchParam}`);
+            setTableRows(rows.data);
+        } catch (err) {
+            console.log(err.message);
+        }
         setLoading(false);
     };
 
     const getTotalRows = async () => {
         // request server for total number rows
         setLoading(true);
-        const rows = await axios.get(`${process.env.REACT_APP_SERVER_API}/dashboard/gettotal/${getCookie("sessionId")}`);
-        setTotalRows(rows.data);
+        try {
+            const rows = await axios.get(`${process.env.REACT_APP_SERVER_API}/dashboard/gettotal/${getCookie("sessionId")}`);
+            setTotalRows(rows.data);
+        } catch (err) {
+            console.log(err.message);
+        }
         setLoading(false);
     };
 
     const deleteRow = async (treatmentNumber) => {
         setLoading(true);
-        await axios.delete(`${process.env.REACT_APP_SERVER_API}/dashboard/delete/${treatmentNumber}`);
-        await getTableRows();
-        await getTotalRows();
+        try {
+            await axios.delete(`${process.env.REACT_APP_SERVER_API}/dashboard/delete/${treatmentNumber}`);
+            await getTableRows();
+            await getTotalRows();
+        } catch (err) {
+            console.log(err.message);
+        }
         setLoading(false);
     };
 
@@ -103,16 +119,20 @@ const Dashboard = () => {
 
     const saveEdit = async (updatedTreatment) => {
         setLoading(true);
-        await axios.patch(`${process.env.REACT_APP_SERVER_API}/dashboard/updates`, { ...updatedTreatment });
-        setEditTreatment({});
-        await getTableRows();
-        await getTotalRows();
+        try {
+            await axios.patch(`${process.env.REACT_APP_SERVER_API}/dashboard/updates`, { ...updatedTreatment });
+            setEditTreatment({});
+            await getTableRows();
+            await getTotalRows();
+        } catch (err) {
+            console.log(err.message);
+        }
         setLoading(false);
     }
 
     const sortByNumber = () => {
         let sortFunc;
-        if (directions.number) {
+        if (directions.number === 0 || directions.number === 2) {
             sortFunc = (row1, row2) => {
                 if (row1.treatmentNumber < row2.treatmentNumber) {
                     return -1;
@@ -122,6 +142,7 @@ const Dashboard = () => {
                 }
                 return 0;
             }
+            setDirections({ ...directions, "number": 1 });
         } else {
             sortFunc = (row1, row2) => {
                 if (row1.treatmentNumber > row2.treatmentNumber) {
@@ -132,29 +153,30 @@ const Dashboard = () => {
                 }
                 return 0;
             }
+            setDirections({ ...directions, "number": 2 });
         }
         tableRows.sort(sortFunc);
-        setDirections({ ...directions, "number": !directions.number });
     }
 
     const sortByInformation = () => {
         let sortFunc;
-        if (directions.info) {
+        if (directions.info === 0 || directions.info === 2) {
             sortFunc = (row1, row2) => {
                 return row1.treatmentInformation.localeCompare(row2.treatmentInformation);
             }
+            setDirections({ ...directions, "info": 1 });
         } else {
             sortFunc = (row1, row2) => {
                 return row2.treatmentInformation.localeCompare(row1.treatmentInformation);
             }
+            setDirections({ ...directions, "info": 2 });
         }
         tableRows.sort(sortFunc);
-        setDirections({ ...directions, "info": !directions.info });
     }
 
     const sortByDate = () => {
         let sortFunc;
-        if (directions.date) {
+        if (directions.date === 0 || directions.date === 2) {
             sortFunc = (row1, row2) => {
                 const date1 = new Date(row1.date), date2 = new Date(row2.date);
                 if (date1 < date2) {
@@ -165,6 +187,8 @@ const Dashboard = () => {
                 }
                 return 0;
             }
+            setDirections({ ...directions, "date": 1 });
+
         } else {
             sortFunc = (row1, row2) => {
                 const date1 = new Date(row1.date), date2 = new Date(row2.date);
@@ -176,29 +200,32 @@ const Dashboard = () => {
                 }
                 return 0;
             }
+            setDirections({ ...directions, "date": 2 });
+
         }
         tableRows.sort(sortFunc);
-        setDirections({ ...directions, "date": !directions.date });
     }
 
     const sortByEmail = () => {
         let sortFunc;
-        if (directions.email) {
+        if (directions.email === 0 || directions.email === 2) {
             sortFunc = (row1, row2) => {
                 return row1.workerEmail.localeCompare(row2.workerEmail);
             }
+            setDirections({ ...directions, "email": 1 });
+
         } else {
             sortFunc = (row1, row2) => {
                 return row2.workerEmail.localeCompare(row1.workerEmail);
             }
+            setDirections({ ...directions, "email": 2 });
         }
         tableRows.sort(sortFunc);
-        setDirections({ ...directions, "email": !directions.email });
     }
 
     const sortByCar = () => {
         let sortFunc;
-        if (directions.carNumber) {
+        if (directions.carNumber === 0 || directions.carNumber === 2) {
             sortFunc = (row1, row2) => {
                 if (row1.carNumber < row2.carNumber) {
                     return -1;
@@ -208,6 +235,8 @@ const Dashboard = () => {
                 }
                 return 0;
             }
+            setDirections({ ...directions, "carNumber": 1 });
+
         } else {
             sortFunc = (row1, row2) => {
                 if (row1.carNumber > row2.carNumber) {
@@ -218,17 +247,21 @@ const Dashboard = () => {
                 }
                 return 0;
             }
+            setDirections({ ...directions, "carNumber": 2 });
         }
         tableRows.sort(sortFunc);
-        setDirections({ ...directions, "carNumber": !directions.carNumber });
     }
 
     const addNewTreatment = async (treatment) => {
         // request from server rows of pageNumber
         setLoading(true);
-        await axios.post(`${process.env.REACT_APP_SERVER_API}/dashboard/createTreatment`, { ...treatment, sessionId: getCookie("sessionId") });
-        await getTableRows();
-        await getTotalRows();
+        try {
+            await axios.post(`${process.env.REACT_APP_SERVER_API}/dashboard/createTreatment`, { ...treatment, sessionId: getCookie("sessionId") });
+            await getTableRows();
+            await getTotalRows();
+        } catch (err) {
+            console.log(err.message);
+        }
         setLoading(false);
     }
 

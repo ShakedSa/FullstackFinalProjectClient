@@ -38,32 +38,37 @@ const Contact = () => {
 
     const submitContactRequest = async () => {
         setLoading(true);
-        if (!stringNullOrEmpty(fullName) && validateEmail(userEmail) && !stringNullOrEmpty(message) && selectedSubject !== 0) {
-            const subject = document.getElementById("subject");
-            const innerText = subject.options[subject.selectedIndex].text;
-            const data = {
-                name: fullName,
-                email: userEmail,
-                concern: innerText,
-                subject: message,
-            };
-            const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/contact-us`, { ...data });
-            if (resData.data.message === "True") {
-                setModalMessage("Message was received, we will do our best to address the issue!");
-                setFullName("");
-                setUserEmail("");
-                setMessage("");
-                setSelectSubject(0);
-                document.getElementById("fullname").value = "";
-                document.getElementById("email").value = "";
-                document.getElementById("message").value = "";
-                document.getElementById("subject").value = 0;
+        try {
+            if (!stringNullOrEmpty(fullName) && validateEmail(userEmail) && !stringNullOrEmpty(message) && selectedSubject !== 0) {
+                const subject = document.getElementById("subject");
+                const innerText = subject.options[subject.selectedIndex].text;
+                const data = {
+                    name: fullName,
+                    email: userEmail,
+                    concern: innerText,
+                    subject: message,
+                };
+                const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/contact-us`, { ...data });
+                if (resData.data.message === "True") {
+                    setModalMessage("Message was received, we will do our best to address the issue!");
+                    setFullName("");
+                    setUserEmail("");
+                    setMessage("");
+                    setSelectSubject(0);
+                    document.getElementById("fullname").value = "";
+                    document.getElementById("email").value = "";
+                    document.getElementById("message").value = "";
+                    document.getElementById("subject").value = 0;
+                } else {
+                    setModalMessage(`Failed to send the message. ${resData.data.message}`);
+                }
+                setShowModal(true);
             } else {
-                setModalMessage(`Failed to send the message. ${resData.data.message}`);
+                setModalMessage("Please fill all the information on the form, requirement are in the tooltip.");
+                setShowModal(true);
             }
-            setShowModal(true);
-        } else {
-            setModalMessage("Please fill all the information on the form, requirement are in the tooltip.");
+        } catch (err) {
+            setModalMessage(`Failed to send the message. ${err.message}`);
             setShowModal(true);
         }
         setLoading(false);
@@ -71,13 +76,18 @@ const Contact = () => {
 
     const contactUs = async () => {
         setLoading(true);
-        const res = await axios.post(`${process.env.REACT_APP_SERVER_API}/contact-email`, { sessionId: getCookie('sessionId') });
-        if (res.data.message === 'True') {
-            setModalMessage("We received your request and we will return to you shortly.");
-        } else {
-            setModalMessage("There was an issue sending your request. Please try again in a few minutes.");
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_SERVER_API}/contact-email`, { sessionId: getCookie('sessionId') });
+            if (res.data.message === 'True') {
+                setModalMessage("We received your request and we will return to you shortly.");
+            } else {
+                setModalMessage("There was an issue sending your request. Please try again in a few minutes.");
+            }
+            setShowModal(true);
+        } catch (err) {
+            setModalMessage(`Failed to send the message. ${err.message}`);
+            setShowModal(true);
         }
-        setShowModal(true);
         setLoading(false);
     }
 

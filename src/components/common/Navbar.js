@@ -35,7 +35,11 @@ const Navbar = ({ links, currentActive }) => {
                                     removeCookie("sessionId");
                                     removeCookie("email");
                                     removeCookie("password");
-                                    await axios.post(`${process.env.REACT_APP_SERVER_API}/logout`, { sessionId: sessionId });
+                                    try {
+                                        await axios.post(`${process.env.REACT_APP_SERVER_API}/logout`, { sessionId: sessionId });
+                                    } catch (err) {
+                                        console.log(err.message);
+                                    }
                                 }}>{link.name}</NavLink>
                             }
                             return <NavLink key={id} to={link.url} className={className}>{link.name}</NavLink>

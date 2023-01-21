@@ -66,8 +66,12 @@ const Login = () => {
   }
 
   const SendLoginRequest = async () => {
-    const res = await axios.post(`${process.env.REACT_APP_SERVER_API}/login`, { email: userEmail, password: userPassword });
-    return res.data;
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_SERVER_API}/login`, { email: userEmail, password: userPassword });
+      return res.data;
+    } catch (err) {
+      return { message: err.message };
+    }
   }
 
   useEffect(() => {
@@ -79,38 +83,54 @@ const Login = () => {
     const password = getCookie("password");
     if (email && password) {
       const sessionId = getCookie('sessionId');
-      axios.post(`${process.env.REACT_APP_SERVER_API}/login-session`, { sessionId: sessionId })
-        .then((res) => {
-          if (res.data.sessionId) {
-            saveCookie("sessionId", res.data.sessionId);
-            setTimeout(() => {
-              navigate("/dashboard");
-            }, 10);
-          } else {
-            setModalMessage(`Failed to login, ${res.data.message}`);
-            setShowModal(true);
-          }
-        });
+      try {
+
+        axios.post(`${process.env.REACT_APP_SERVER_API}/login-session`, { sessionId: sessionId })
+          .then((res) => {
+            if (res.data.sessionId) {
+              saveCookie("sessionId", res.data.sessionId);
+              setTimeout(() => {
+                navigate("/dashboard");
+              }, 10);
+            } else {
+              setModalMessage(`Failed to login, ${res.data.message}`);
+              setShowModal(true);
+            }
+          });
+      } catch (err) {
+        setModalMessage(`Failed to login, ${err.message}`);
+        setShowModal(true);
+      }
+      finally {
+        setLoading(false)
+      }
     }
-    setLoading(false)
     return () => setLoading(false);
   }, []);
 
   useEffect(() => {
     const sessionId = getCookie('sessionId');
     if (sessionId) {
-      axios.post(`${process.env.REACT_APP_SERVER_API}/login-session`, { sessionId: sessionId })
-        .then((res) => {
-          if (res.data.sessionId) {
-            saveSession(res.data.sessionId);
-            setTimeout(() => {
-              navigate("/dashboard");
-            }, 10);
-          } else {
-            setModalMessage(`Failed to login, ${res.data.message}`);
-            setShowModal(true);
-          }
-        });
+      try {
+        axios.post(`${process.env.REACT_APP_SERVER_API}/login-session`, { sessionId: sessionId })
+          .then((res) => {
+            if (res.data.sessionId) {
+              saveSession(res.data.sessionId);
+              setTimeout(() => {
+                navigate("/dashboard");
+              }, 10);
+            } else {
+              setModalMessage(`Failed to login, ${res.data.message}`);
+              setShowModal(true);
+            }
+          });
+      } catch (err) {
+        setModalMessage(`Failed to login, ${err.message}`);
+        setShowModal(true);
+      }
+      finally {
+        setLoading(false)
+      }
     }
   }, [])
 

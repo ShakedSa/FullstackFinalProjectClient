@@ -24,19 +24,25 @@ const Forgotpassword = () => {
 
     const SendForgotPasswordRequest = async () => {
         setLoading(true);
-        if (validateEmail(userEmail)) {
-            const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/forgetpassword`, { email: userEmail });
-            if (resData.data.message === 'True') {
-                setModalMessage("We have sent your password, please check your email.");
+        try {
+            if (validateEmail(userEmail)) {
+                const resData = await axios.post(`${process.env.REACT_APP_SERVER_API}/forgetpassword`, { email: userEmail });
+                if (resData.data.message === 'True') {
+                    setModalMessage("We have sent your password, please check your email.");
+                } else {
+                    setModalMessage("Failed to send your password. Please try again in a few minutes.");
+                }
+                setShowModal(true);
             } else {
-                setModalMessage("Failed to send your password. Please try again in a few minutes.");
+                setModalMessage("Please fill the email, requirement are in the tooltip.");
+                setShowModal(true);
             }
+        } catch (err) {
+            setModalMessage("Failed to send your password. ", err.message);
             setShowModal(true);
-        } else {
-            setModalMessage("Please fill the email, requirement are in the tooltip.");
-            setShowModal(true);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }
     return (
         <>
