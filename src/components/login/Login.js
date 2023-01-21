@@ -75,16 +75,15 @@ const Login = () => {
   }
 
   useEffect(() => {
-    setLoading(true);
     document.title = `${process.env.REACT_APP_SITE_NAME} - Login`;
 
     // Check cookies for "remember me"
     const email = getCookie("email");
     const password = getCookie("password");
     if (email && password) {
+      setLoading(true);
       const sessionId = getCookie('sessionId');
       try {
-
         axios.post(`${process.env.REACT_APP_SERVER_API}/login-session`, { sessionId: sessionId })
           .then((res) => {
             if (res.data.sessionId) {
@@ -127,9 +126,6 @@ const Login = () => {
       } catch (err) {
         setModalMessage(`Failed to login, ${err.message}`);
         setShowModal(true);
-      }
-      finally {
-        setLoading(false)
       }
     }
   }, [])
